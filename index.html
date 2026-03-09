@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Minha Saúde Financeira</title>
+    <style>
+        /* ============================================
+           RESET E VARIÁVEIS
+        ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --verde:       #27ae60;
+            --verde-claro: #2ecc71;
+            --vermelho:    #e74c3c;
+            --amarelo:     #f39c12;
+            --azul:        #2980b9;
+            --azul-claro:  #3498db;
+            --roxo:        #8e44ad;
+            --cinza-claro: #f4f6f8;
+            --cinza:       #95a5a6;
+            --branco:      #ffffff;
+            --texto:       #2c3e50;
+            --sombra:      0 4px 15px rgba(0,0,0,0.08);
+            --sombra-hover:0 8px 25px rgba(0,0,0,0.15);
+            --radius:      16px;
+            --radius-sm:   10px;
+            --transicao:   all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--cinza-claro);
+            color: var(--texto);
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* ============================================
+           HEADER
+        ============================================ */
+        header {
+            background: linear-gradient(135deg, #1a5276, #2980b9);
+            color: white;
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-titulo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-data {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* ============================================
+           NAVEGAÇÃO
+        ============================================ */
+        nav {
+            background: white;
+            border-bottom: 2px solid #e8ecef;
+            position: sticky;
+            top: 73px;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-lista {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            gap: 0;
+        }
+
+        .nav-lista::-webkit-scrollbar { display: none; }
+
+        .nav-btn {
+            flex: 0 0 auto;
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cinza);
+            border-bottom: 3px solid transparent;
+            transition: var(--transicao);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            color: var(--azul);
+            background: #f0f7ff;
+        }
+
+        .nav-btn.ativo {
+            color: var(--azul);
+            border-bottom-color: var(--azul);
+            background: #f0f7ff;
+        }
+
+        /* ============================================
+           CONTAINER PRINCIPAL
+        ============================================ */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px 40px;
+        }
+
+        /* ============================================
+           SEÇÕES
+        ============================================ */
+        .secao {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .secao.ativa { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .secao-titulo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--texto);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8ecef;
+        }
+
+        /* ============================================
+           CARDS
+        ============================================ */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--sombra);
+            transition: var(--transicao);
+            margin-bottom: 16px;
+        }
+
+        .card:hover {
+            box-shadow: var(--sombra-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-titulo {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cinza);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-valor {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--texto);
+        }
+
+        .card-detalhe {
+            font-size: 0.85rem;
+            color: var(--cinza);
+            margin-top: 4px;
+        }
+
+        /* ============================================
+           GRID DE CARDS
+        ============================================ */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* ============================================
+           CARDS COLORIDOS
+        ============================================ */
+        .card-verde  { border-left: 5px solid var(--verde); }
+        .card-vermelho { border-left: 5px solid var(--vermelho); }
+        .card-amarelo { border-left: 5px solid var(--amarelo); }
+        .card-azul   { border-left: 5px solid var(--azul); }
+        .card-roxo   { border-left: 5px solid var(--roxo); }
+
+        .card-verde  .card-valor { color: var(--verde); }
+        .card-vermelho .card-valor { color: var(--vermelho); }
+        .card-amarelo .card-valor { color: var(--amarelo); }
+        .card-azul   .card-valor { color: var(--azul); }
+        .card-roxo   .card-valor { color: var(--roxo); }
+
+        /* ============================================
+           BARRA DE PROGRESSO
+        ============================================ */
+        .barra-container {
+            margin: 10px 0;
+        }
+
+        .barra-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--cinza);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .barra-fundo {
+            background: #e8ecef;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .barra-preenchimento {
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.8s ease;
+        }
+
+        .barra-verde  { background: linear-gradient(90deg, var(--verde), var(--verde-claro)); }
+        .barra-amarela { background: linear-gradient(90deg, #e67e22, var(--amarelo)); }
+        .barra-vermelha { background: linear-gradient(90deg, #c0392b, var(--vermelho)); }
+
+        /* ============================================
+           BADGE DE RISCO
+        ============================================ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-baixo  { background: #d5f5e3; color: #1e8449; }
+        .badge-medio  { background: #fef9e7; color: #b7770d; }
+        .badge-alto   { background: #fdebd0; color: #ca6f1e; }
+        .badge-critico{ background: #fadbd8; color: #922b21; }
+
+        /* ============================================
+           FORMULÁRIOS
+        ============================================ */
+        .form-grupo {
+            margin-bottom: 16px;
+        }
+
+        .form-grupo label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--texto);
+            margin-bottom: 6px;
+        }
+
+        .form-grupo input,
+        .form-grupo select,
+        .form-grupo textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e8ecef;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--texto);
+            transition: var(--transicao);
+            background: white;
+        }
+
+        .form-grupo input:focus,
+        .form-grupo select:focus,
+        .form-grupo textarea:focus {
+            outline: none;
+            border-color: var(--azul);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+        }
+
+        .form-grupo input[type="number"] {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* ============================================
+           BOTÕES
+        ============================================ */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transicao);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra-hover);
+        }
+
+        .btn:active { transform: translateY(0); }
+
+        .btn-primario {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            color: white;
+        }
+
+        .btn-verde {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-vermelho {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            color: white;
+        }
+
+        .btn-amarelo {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+        }
+
+        .btn-cinza {
+            background: #ecf0f1;
+            color: var(--texto);
+        }
+
+        .btn-pequeno {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .btn-bloco {
+            width: 100%;
+            justify-content: center;
+            padding: 16px;
+            font-size: 1.1rem;
+        }
+
+        /* ============================================
+           LISTA DE ITENS
+        ============================================ */
+        .lista-item {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid var(--azul);
+            transition: var(--transicao);
+        }
+
+        .lista-item:hover {
+            box-shadow: var(--sombra);
+            transform: translateX(3px);
+        }
+
+        .lista-item-info { flex: 1; }
+
+        .lista-item-nome {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--texto);
+            margin-bottom: 3px;
+        }
+
+        .lista-item-detalhe {
+            font-size: 0.82rem;
+            color: var(--cinza);
+        }
+
+        .lista-item-valor {
+            font-weight: 800;
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           ALERTAS
+        ============================================ */
+        .alerta {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .alerta-icone { font-size: 1.3rem; flex-shrink: 0; }
+
+        .alerta-vermelho {
+            background: #fadbd8;
+            border-left: 4px solid var(--vermelho);
+            color: #922b21;
+        }
+
+        .alerta-amarelo {
+            background: #fef9e7;
+            border-left: 4px solid var(--amarelo);
+            color: #7d6608;
+        }
+
+        .alerta-verde {
+            background: #d5f5e3;
+            border-left: 4px solid var(--verde);
+            color: #1e8449;
+        }
+
+        .alerta-azul {
+            background: #d6eaf8;
+            border-left: 4px solid var(--azul);
+            color: #1a5276;
+        }
+
+        /* ============================================
+           SIMULADOR
+        ============================================ */
+        .simulador-resultado {
+            background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 16px;
+            border: 2px solid #bee3f8;
+        }
+
+        .simulador-linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #d6eaf8;
+        }
+
+        .simulador-linha:last-child { border-bottom: none; }
+
+        .simulador-linha-label {
+            font-size: 0.9rem;
+            color: var(--cinza);
+            font-weight: 600;
+        }
+
+        .simulador-linha-valor {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--texto);
+        }
+
+        /* ============================================
+           PLANO DE SAÍDA
+        ============================================ */
+        .plano-passo {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .plano-numero {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .plano-texto {
+            flex: 1;
+        }
+
+        .plano-texto strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--texto);
+            margin-bottom: 3px;
+        }
+
+        .plano-texto span {
+            font-size: 0.85rem;
+            color: var(--cinza);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           VAZIO
+        ============================================ */
+        .vazio {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--cinza);
+        }
+
+        .vazio-icone {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .vazio-texto {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           TOAST / NOTIFICAÇÃO
+        ============================================ */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: white;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            max-width: 320px;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           MEDIDOR CIRCULAR
+        ============================================ */
+        .medidor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .medidor-circulo {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 12px;
+        }
+
+        .medidor-svg {
+            transform: rotate(-90deg);
+            width: 140px;
+            height: 140px;
+        }
+
+        .medidor-fundo {
+            fill: none;
+            stroke: #e8ecef;
+            stroke-width: 12;
+        }
+
+        .medidor-progresso {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .medidor-texto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .medidor-percentual {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .medidor-label {
+            font-size: 0.7rem;
+            color: var(--cinza);
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           TABS INTERNAS
+        ============================================ */
+        .tabs-internas {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 18px;
+            border: 2px solid #e8ecef;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transicao);
+            color: var(--cinza);
+            font-family: inherit;
+        }
+
+        .tab-btn:hover { border-color: var(--azul); color: var(--azul); }
+
+        .tab-btn.ativo {
+            background: var(--azul);
+            border-color: var(--azul);
+            color: white;
+        }
+
+        .tab-conteudo { display: none; }
+        .tab-conteudo.ativo { display: block; }
+
+        /* ============================================
+           SEPARADOR
+        ============================================ */
+        .separador {
+            border: none;
+            border-top: 2px dashed #e8ecef;
+            margin: 20px 0;
+        }
+
+        /* ============================================
+           RESPONSIVO
+        ============================================ */
+        @media (max-width: 600px) {
+            .header-titulo { font-size: 1.2rem; }
+            .card-valor    { font-size: 1.5rem; }
+            .nav-btn       { padding: 12px 14px; font-size: 0.78rem; }
+            main           { padding: 16px 12px 40px; }
+            .form-grid     { grid-template-columns: 1fr; }
+        }
+
+        /* ============================================
+           MODO IMPRESSÃO
+        ============================================ */
+        @media print {
+            nav, header { position: static; }
+            .secao { display: block !important; margin-bottom: 40px; }
+            .btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====================================
+     HEADER
+===================================== -->
+<header>
+    <div class="header-content">
+        <div class="header-titulo">
+            💰 Minha Saúde Financeira
+        </div>
+        <div class="header-data" id="dataHoje"></div>
+    </div>
+</header>
+
+<!-- ====================================
+     NAVEGAÇÃO
+===================================== -->
+<nav>
+    <div class="nav-lista">
+        <button class="nav-btn ativo" onclick="mostrarSecao('dashboard', this)">
+            📊 Visão Geral
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('entradas', this)">
+            💵 Entradas
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('cartao', this)">
+            💳 Cartão
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('dividas', this)">
+            📋 Dívidas
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('simulador', this)">
+            🔢 Simulador
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('alertas', this)">
+            🔔 Alertas
+        </button>
+        <button class="nav-btn" onclick="mostrarSecao('plano', this)">
+            🗺️ Plano
+        </button>
+    </div>
+</nav>
+
+<!-- ====================================
+     MAIN
+===================================== -->
+<main>
+
+    <!-- ===========================
+         SEÇÃO 1 — DASHBOARD
+    ============================ -->
+    <section class="secao ativa" id="sec-dashboard">
+
+        <h2 class="secao-titulo">📊 Minha Situação Financeira</h2>
+
+        <!-- Cards de Resumo -->
+        <div class="grid-2">
+            <div class="card card-verde">
+                <div class="card-titulo">💵 Dinheiro Disponível</div>
+                <div class="card-valor" id="dash-saldo">R$ 0,00</div>
+                <div class="card-detalhe" id="dash-saldo-det">Entradas menos gastos fixos</div>
+            </div>
+            <div class="card card-vermelho">
+                <div class="card-titulo">📋 Total de Dívidas</div>
+                <div class="card-valor" id="dash-dividas">R$ 0,00</div>
+                <div class="card-detalhe" id="dash-dividas-det">Soma de todas as dívidas</div>
+            </div>
+            <div class="card card-amarelo">
+                <div class="card-titulo">💳 Crédito Usado</div>
+                <div class="card-valor" id="dash-credito">R$ 0,00</div>
+                <div class="card-detalhe" id="dash-credito-det">Do limite disponível</div>
+            </div>
+            <div class="card card-azul">
+                <div class="card-titulo">📅 Próximo Vencimento</div>
+                <div class="card-valor" id="dash-venc" style="font-size:1.2rem">-</div>
+                <div class="card-detalhe" id="dash-venc-det">Dívida mais urgente</div>
+            </div>
+        </div>
+
+        <!-- Risco Financeiro -->
+        <div class="card" id="card-risco">
+            <div class="card-titulo">🎯 Risco Financeiro Atual</div>
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:10px;">
+                <div class="medidor-container" style="padding:0;">
+                    <div class="medidor-circulo">
+                        <svg class="medidor-svg" viewBox="0 0 140 140">
+                            <circle class="medidor-fundo" cx="70" cy="70" r="54"/>
+                            <circle class="medidor-progresso" id="medidor-circ" cx="70" cy="70" r="54"
+                                stroke="#27ae60"
+                                stroke-dasharray="339.3"
+                                stroke-dashoffset="339.3"/>
+                        </svg>
+                        <div class="medidor-texto">
+                            <div class="medidor-percentual" id="medidor-num">0%</div>
+                            <div class="medidor-label">risco</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="flex:1; min-width:180px;">
+                    <div id="badge-risco" class="badge badge-baixo" style="margin-bottom:12px;">
+                        ✅ Risco Baixo
+                    </div>
+                    <div id="texto-risco" style="font-size:0.9rem; color:var(--cinza); line-height:1.6;">
+                        Cadastre suas dívidas, entradas e cartão para calcular o risco.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra Uso do Limite -->
+            <div style="margin-top:16px;">
+                <div class="barra-container">
+                    <div class="barra-label">
+                        <span>Uso do Limite do Cartão</span>
+                        <span id="pct-limite-txt">0%</span>
+                    </div>
+                    <div class="barra-fundo">
+                        <div class="barra-preenchimento barra-verde"
+                             id="barra-limite" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="barra-container">
+                    <div class="barra-label">
+                        <span>Dívidas vs. Renda Mensal</span>
+                        <span id="pct-divida-txt">0%</span>
+                    </div>
+                    <div class="barra-fundo">
+                        <div class="barra-preenchimento barra-verde"
+                             id="barra-divida" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dica do Dia -->
+        <div class="alerta alerta-azul">
+            <div class="alerta-icone">💡</div>
+            <div id="dica-dia">
+                Bem-vindo! Comece cadastrando suas <strong>entradas de dinheiro</strong>
+                e depois suas <strong>dívidas</strong>. O app calculará o risco automaticamente.
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 2 — ENTRADAS
+    ============================ -->
+    <section class="secao" id="sec-entradas">
+
+        <h2 class="secao-titulo">💵 Minhas Entradas de Dinheiro</h2>
+
+        <!-- Formulário -->
+        <div class="card">
+            <div class="card-titulo">➕ Adicionar Entrada</div>
+            <div class="form-grid" style="margin-top:12px;">
+                <div class="form-grupo">
+                    <label>Tipo de Entrada</label>
+                    <select id="ent-tipo">
+                        <option value="Aposentadoria">🏛️ Aposentadoria</option>
+                        <option value="Pensão">💼 Pensão</option>
+                        <option value="Ajuda Familiar">👨‍👩‍👧 Ajuda Familiar</option>
+                        <option value="Salário">💰 Salário</option>
+                        <option value="Aluguel Recebido">🏠 Aluguel Recebido</option>
+                        <option value="Freelance">🎯 Freelance / Extra</option>
+                        <option value="Outro">📌 Outro</option>
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label>Valor (R$)</label>
+                    <input type="number" id="ent-valor" placeholder="0,00"
+                           step="0.01" min="0">
+                </div>
+                <div class="form-grupo">
+                    <label>Dia que Recebe</label>
+                    <input type="number" id="ent-dia" placeholder="Ex: 5"
+                           min="1" max="31">
+                </div>
+                <div class="form-grupo">
+                    <label>Observação (opcional)</label>
+                    <input type="text" id="ent-obs" placeholder="Ex: INSS Banco X">
+                </div>
+            </div>
+            <button class="btn btn-verde btn-bloco" onclick="adicionarEntrada()">
+                ✅ Adicionar Entrada
+            </button>
+        </div>
+
+        <!-- Resumo -->
+        <div class="grid-3">
+            <div class="card card-verde">
+                <div class="card-titulo">Total Mensal</div>
+                <div class="card-valor" id="ent-total">R$ 0,00</div>
+            </div>
+            <div class="card card-azul">
+                <div class="card-titulo">Nº de Fontes</div>
+                <div class="card-valor" id="ent-qtd">0</div>
+            </div>
+            <div class="card card-amarelo">
+                <div class="card-titulo">Média por Fonte</div>
+                <div class="card-valor" id="ent-media">R$ 0,00</div>
+            </div>
+        </div>
+
+        <!-- Lista -->
+        <div id="lista-entradas">
+            <div class="vazio">
+                <div class="vazio-icone">💵</div>
+                <div class="vazio-texto">Nenhuma entrada cadastrada ainda.<br>
+                Adicione suas fontes de renda acima.</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 3 — CARTÃO
+    ============================ -->
+    <section class="secao" id="sec-cartao">
+
+        <h2 class="secao-titulo">💳 Controle do Cartão de Crédito</h2>
+
+        <!-- Configuração -->
+        <div class="card">
+            <div class="card-titulo">⚙️ Configurar Meu Cartão</div>
+            <div class="form-grid" style="margin-top:12px;">
+                <div class="form-grupo">
+                    <label>Limite Total do Cartão (R$)</label>
+                    <input type="number" id="cart-limite" placeholder="0,00"
+                           step="0.01" min="0" oninput="atualizarCartao()">
+                </div>
+                <div class="form-grupo">
+                    <label>Valor Utilizado Hoje (R$)</label>
+                    <input type="number" id="cart-usado" placeholder="0,00"
+                           step="0.01" min="0" oninput="atualizarCartao()">
+                </div>
+                <div class="form-grupo">
+                    <label>Valor da Fatura Atual (R$)</label>
+                    <input type="number" id="cart-fatura" placeholder="0,00"
+                           step="0.01" min="0" oninput="atualizarCartao()">
+                </div>
+                <div class="form-grupo">
+                    <label>Dia do Vencimento da Fatura</label>
+                    <input type="number" id="cart-venc" placeholder="Ex: 10"
+                           min="1" max="31" oninput="atualizarCartao()">
+                </div>
+                <div class="form-grupo">
+                    <label>Juros do Rotativo (% ao mês)</label>
+                    <input type="number" id="cart-juros" placeholder="Ex: 15"
+                           step="0.1" min="0" value="15" oninput="atualizarCartao()">
+                </div>
+                <div class="form-grupo">
+                    <label>Banco / Operadora</label>
+                    <input type="text" id="cart-banco" placeholder="Ex: Nubank">
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel Visual do Cartão -->
+        <div class="card" id="painel-cartao">
+            <div class="card-titulo">📊 Situação do Cartão</div>
+
+            <div style="margin-top:12px;" class="medidor-container">
+                <div class="medidor-circulo">
+                    <svg class="medidor-svg" viewBox="0 0 140 140">
+                        <circle class="medidor-fundo" cx="70" cy="70" r="54"/>
+                        <circle class="medidor-progresso" id="medidor-cart"
+                            cx="70" cy="70" r="54"
+                            stroke="#27ae60"
+                            stroke-dasharray="339.3"
+                            stroke-dashoffset="339.3"/>
+                    </svg>
+                    <div class="medidor-texto">
+                        <div class="medidor-percentual" id="cart-pct-num">0%</div>
+                        <div class="medidor-label">do limite</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-top:12px;">
+                <div class="card card-azul" style="margin-bottom:0; padding:14px;">
+                    <div class="card-titulo" style="font-size:0.75rem">Limite Total</div>
+                    <div class="card-valor" id="cart-v-limite" style="font-size:1.3rem">R$ 0,00</div>
+                </div>
+                <div class="card card-vermelho" style="margin-bottom:0; padding:14px;">
+                    <div class="card-titulo" style="font-size:0.75rem">Usado</div>
+                    <div class="card-valor" id="cart-v-usado" style="font-size:1.3rem">R$ 0,00</div>
+                </div>
+                <div class="card card-verde" style="margin-bottom:0; padding:14px;">
+                    <div class="card-titulo" style="font-size:0.75rem">Disponível</div>
+                    <div class="card-valor" id="cart-v-disp" style="font-size:1.3rem">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px;" id="alert-cartao"></div>
+
+            <!-- Simulação de Juros Rotativos -->
+            <div class="simulador-resultado" id="sim-juros" style="display:none; margin-top:16px;">
+                <div style="font-weight:700; margin-bottom:10px; color:var(--vermelho);">
+                    ⚠️ Se Não Pagar a Fatura Completa…
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Fatura atual</span>
+                    <span class="simulador-linha-valor" id="fat-atual">R$ 0,00</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Juros em 1 mês</span>
+                    <span class="simulador-linha-valor" id="fat-juros1" style="color:var(--vermelho)">
+                        R$ 0,00</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Total após 1 mês</span>
+                    <span class="simulador-linha-valor" id="fat-total1">R$ 0,00</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Total após 3 meses</span>
+                    <span class="simulador-linha-valor" id="fat-total3" style="color:var(--vermelho)">
+                        R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 4 — DÍVIDAS
+    ============================ -->
+    <section class="secao" id="sec-dividas">
+
+        <h2 class="secao-titulo">📋 Minhas Dívidas</h2>
+
+        <!-- Formulário -->
+        <div class="card">
+            <div class="card-titulo">➕ Cadastrar Dívida</div>
+            <div class="form-grid" style="margin-top:12px;">
+                <div class="form-grupo">
+                    <label>Nome da Dívida / Credor</label>
+                    <input type="text" id="div-nome" placeholder="Ex: Banco Itaú">
+                </div>
+                <div class="form-grupo">
+                    <label>Valor Total da Dívida (R$)</label>
+                    <input type="number" id="div-valor" placeholder="0,00"
+                           step="0.01" min="0">
+                </div>
+                <div class="form-grupo">
+                    <label>Parcela Mensal (R$)</label>
+                    <input type="number" id="div-parcela" placeholder="0,00"
+                           step="0.01" min="0">
+                </div>
+                <div class="form-grupo">
+                    <label>Juros ao Mês (%)</label>
+                    <input type="number" id="div-juros" placeholder="Ex: 5"
+                           step="0.1" min="0">
+                </div>
+                <div class="form-grupo">
+                    <label>Dia do Vencimento</label>
+                    <input type="number" id="div-venc" placeholder="Ex: 15"
+                           min="1" max="31">
+                </div>
+                <div class="form-grupo">
+                    <label>Tipo</label>
+                    <select id="div-tipo">
+                        <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
+                        <option value="Empréstimo Pessoal">🏦 Empréstimo Pessoal</option>
+                        <option value="Cheque Especial">📝 Cheque Especial</option>
+                        <option value="Crediário">🛒 Crediário</option>
+                        <option value="Consignado">💼 Consignado</option>
+                        <option value="Financiamento">🏠 Financiamento</option>
+                        <option value="Dívida com Familiar">👨‍👩‍👧 Dívida com Familiar</option>
+                        <option value="Outro">📌 Outro</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-vermelho btn-bloco" onclick="adicionarDivida()">
+                ➕ Adicionar Dívida
+            </button>
+        </div>
+
+        <!-- Resumo -->
+        <div class="grid-3">
+            <div class="card card-vermelho">
+                <div class="card-titulo">Total de Dívidas</div>
+                <div class="card-valor" id="div-total">R$ 0,00</div>
+            </div>
+            <div class="card card-amarelo">
+                <div class="card-titulo">Parcelas/Mês</div>
+                <div class="card-valor" id="div-parcelas-mes">R$ 0,00</div>
+            </div>
+            <div class="card card-azul">
+                <div class="card-titulo">Nº de Dívidas</div>
+                <div class="card-valor" id="div-qtd">0</div>
+            </div>
+        </div>
+
+        <!-- Lista -->
+        <div id="lista-dividas">
+            <div class="vazio">
+                <div class="vazio-icone">📋</div>
+                <div class="vazio-texto">Nenhuma dívida cadastrada ainda.<br>
+                Adicione suas dívidas acima.</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 5 — SIMULADOR
+    ============================ -->
+    <section class="secao" id="sec-simulador">
+
+        <h2 class="secao-titulo">🔢 Simulador de Pagamento</h2>
+
+        <!-- Tabs Internas -->
+        <div class="tabs-internas">
+            <button class="tab-btn ativo" onclick="mostrarTab('sim-basico', this)">
+                📊 Simulação Básica
+            </button>
+            <button class="tab-btn" onclick="mostrarTab('sim-comparar', this)">
+                ⚖️ Comparar Cenários
+            </button>
+            <button class="tab-btn" onclick="mostrarTab('sim-estrategia', this)">
+                🎯 Estratégias
+            </button>
+        </div>
+
+        <!-- TAB: Simulação Básica -->
+        <div class="tab-conteudo ativo" id="tab-sim-basico">
+            <div class="card">
+                <div class="card-titulo">Configure a Simulação</div>
+                <div class="form-grid" style="margin-top:12px;">
+                    <div class="form-grupo">
+                        <label>Valor Total da Dívida (R$)</label>
+                        <input type="number" id="sim-divida" placeholder="0,00"
+                               step="0.01" min="0">
+                    </div>
+                    <div class="form-grupo">
+                        <label>Pagamento Mensal (R$)</label>
+                        <input type="number" id="sim-pagto" placeholder="0,00"
+                               step="0.01" min="0">
+                    </div>
+                    <div class="form-grupo">
+                        <label>Juros ao Mês (%)</label>
+                        <input type="number" id="sim-juros" placeholder="Ex: 5"
+                               step="0.1" min="0" value="5">
+                    </div>
+                </div>
+                <div class="form-grupo">
+                    <label>Usar total das minhas dívidas cadastradas:</label>
+                    <button class="btn btn-cinza btn-pequeno" onclick="preencherSimulador()">
+                        📋 Importar do Cadastro
+                    </button>
+                </div>
+                <button class="btn btn-primario btn-bloco" onclick="simularPagamento()">
+                    🔢 Simular Agora
+                </button>
+            </div>
+
+            <div id="resultado-simulacao"></div>
+        </div>
+
+        <!-- TAB: Comparar Cenários -->
+        <div class="tab-conteudo" id="tab-sim-comparar">
+            <div class="card">
+                <div class="card-titulo">Compare Diferentes Pagamentos</div>
+                <div class="form-grid" style="margin-top:12px;">
+                    <div class="form-grupo">
+                        <label>Valor Total da Dívida (R$)</label>
+                        <input type="number" id="comp-divida" placeholder="0,00"
+                               step="0.01" min="0">
+                    </div>
+                    <div class="form-grupo">
+                        <label>Juros ao Mês (%)</label>
+                        <input type="number" id="comp-juros" placeholder="Ex: 5"
+                               step="0.1" value="5">
+                    </div>
+                </div>
+                <div id="comp-pagtos">
+                    <div class="form-grupo">
+                        <label>Opção 1 — Pagamento Mínimo (R$)</label>
+                        <input type="number" id="comp-p1" placeholder="Ex: 200" step="0.01" min="0">
+                    </div>
+                    <div class="form-grupo">
+                        <label>Opção 2 — Pagamento Médio (R$)</label>
+                        <input type="number" id="comp-p2" placeholder="Ex: 400" step="0.01" min="0">
+                    </div>
+                    <div class="form-grupo">
+                        <label>Opção 3 — Pagamento Alto (R$)</label>
+                        <input type="number" id="comp-p3" placeholder="Ex: 700" step="0.01" min="0">
+                    </div>
+                </div>
+                <button class="btn btn-primario btn-bloco" onclick="compararCenarios()">
+                    ⚖️ Comparar Cenários
+                </button>
+            </div>
+            <div id="resultado-comparacao"></div>
+        </div>
+
+        <!-- TAB: Estratégias -->
+        <div class="tab-conteudo" id="tab-sim-estrategia">
+            <div class="card">
+                <div class="card-titulo">🎯 Qual Estratégia Usar?</div>
+                <div style="margin-top:12px;">
+
+                    <div class="plano-passo">
+                        <div class="plano-numero">❄️</div>
+                        <div class="plano-texto">
+                            <strong>Método Bola de Neve</strong>
+                            <span>Pague as <strong>menores dívidas primeiro</strong>, depois use esse
+                            dinheiro para as maiores. Dá motivação porque você elimina dívidas
+                            rapidamente. Ideal para quem precisa de estímulo.</span>
+                        </div>
+                    </div>
+
+                    <div class="plano-passo">
+                        <div class="plano-numero">🌊</div>
+                        <div class="plano-texto">
+                            <strong>Método Avalanche</strong>
+                            <span>Pague as dívidas com <strong>maiores juros primeiro</strong>.
+                            Economiza mais dinheiro no longo prazo. Ideal para quem quer
+                            pagar menos juros no total.</span>
+                        </div>
+                    </div>
+
+                    <div class="plano-passo">
+                        <div class="plano-numero">🤝</div>
+                        <div class="plano-texto">
+                            <strong>Renegociação</strong>
+                            <span>Negocie diretamente com o credor. Muitos bancos aceitam
+                            <strong>reduzir juros ou parcelar melhor</strong>. Sempre tente
+                            antes de usar crédito rotativo.</span>
+                        </div>
+                    </div>
+
+                    <div class="plano-passo">
+                        <div class="plano-numero">🔄</div>
+                        <div class="plano-texto">
+                            <strong>Consolidação</strong>
+                            <span>Junte todas as dívidas em <strong>uma só com juros menores</strong>.
+                            Crédito consignado tem juros muito mais baixos que cartão.
+                            Consulte seu banco.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-titulo">📊 Calculadora de Estratégia</div>
+                <div class="form-grupo" style="margin-top:12px;">
+                    <label>Quanto posso pagar extra por mês? (R$)</label>
+                    <input type="number" id="est-extra" placeholder="Ex: 200" step="0.01" min="0">
+                </div>
+                <button class="btn btn-verde btn-bloco" onclick="calcularEstrategia()">
+                    🎯 Qual Estratégia é Melhor Para Mim?
+                </button>
+                <div id="resultado-estrategia" style="margin-top:16px;"></div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 6 — ALERTAS
+    ============================ -->
+    <section class="secao" id="sec-alertas">
+
+        <h2 class="secao-titulo">🔔 Alertas e Avisos</h2>
+
+        <div id="container-alertas">
+            <div class="vazio">
+                <div class="vazio-icone">🔔</div>
+                <div class="vazio-texto">Cadastre seus dados para receber alertas personalizados.</div>
+            </div>
+        </div>
+
+        <hr class="separador">
+
+        <!-- Dicas Fixas -->
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:14px; color:var(--texto);">
+            📚 Dicas Sempre Importantes
+        </h3>
+
+        <div class="alerta alerta-azul">
+            <div class="alerta-icone">💡</div>
+            <div><strong>Nunca pague apenas o mínimo do cartão.</strong> Os juros do rotativo
+            podem chegar a 400% ao ano no Brasil. Sempre pague o valor total.</div>
+        </div>
+
+        <div class="alerta alerta-amarelo">
+            <div class="alerta-icone">⚠️</div>
+            <div><strong>Crédito rotativo é emergência, não hábito.</strong> Usar o cartão
+            para cobrir contas mensais cria uma dependência perigosa.</div>
+        </div>
+
+        <div class="alerta alerta-verde">
+            <div class="alerta-icone">✅</div>
+            <div><strong>Tente guardar pelo menos R$50 por mês.</strong> Uma pequena reserva
+            evita que você recorra ao cartão em emergências.</div>
+        </div>
+
+        <div class="alerta alerta-azul">
+            <div class="alerta-icone">📞</div>
+            <div><strong>CadÚnico, INSS e Procon</strong> oferecem orientação financeira
+            gratuita. Renegociação de dívidas com assistência é mais fácil.</div>
+        </div>
+
+        <div class="alerta alerta-vermelho">
+            <div class="alerta-icone">🚨</div>
+            <div><strong>Se o uso do cartão ultrapassar 80% do limite</strong>, o banco pode
+            reduzir ou bloquear o crédito sem aviso. Mantenha abaixo de 60%.</div>
+        </div>
+
+    </section>
+
+    <!-- ===========================
+         SEÇÃO 7 — PLANO
+    ============================ -->
+    <section class="secao" id="sec-plano">
+
+        <h2 class="secao-titulo">🗺️ Meu Plano de Saída das Dívidas</h2>
+
+        <!-- Gerador do Plano -->
+        <div class="card">
+            <div class="card-titulo">⚙️ Gerar Meu Plano Personalizado</div>
+            <div class="form-grid" style="margin-top:12px;">
+                <div class="form-grupo">
+                    <label>Quanto posso destinar para dívidas por mês? (R$)</label>
+                    <input type="number" id="plano-valor" placeholder="Ex: 500"
+                           step="0.01" min="0">
+                </div>
+                <div class="form-grupo">
+                    <label>Prefiro qual estratégia?</label>
+                    <select id="plano-estrategia">
+                        <option value="neve">❄️ Bola de Neve (menor primeiro)</option>
+                        <option value="avalanche">🌊 Avalanche (maior juros primeiro)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-verde btn-bloco" onclick="gerarPlano()">
+                🗺️ Gerar Meu Plano
+            </button>
+        </div>
+
+        <div id="resultado-plano"></div>
+
+        <!-- Plano de Prosperidade -->
+        <div class="card" style="border-top: 4px solid var(--verde);">
+            <div class="card-titulo">🌱 Plano de Prosperidade — Depois das Dívidas</div>
+            <div style="margin-top:12px;">
+
+                <div class="plano-passo">
+                    <div class="plano-numero" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">
+                        1</div>
+                    <div class="plano-texto">
+                        <strong>Fundo de Emergência (3–6 meses de gastos)</strong>
+                        <span>Primeiro objetivo após quitar dívidas. Guarde em conta poupança
+                        ou CDB com liquidez diária. Isso evita voltar para o crédito.</span>
+                    </div>
+                </div>
+
+                <div class="plano-passo">
+                    <div class="plano-numero" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">
+                        2</div>
+                    <div class="plano-texto">
+                        <strong>Usar Cartão como Ferramenta, Não Dependência</strong>
+                        <span>Cartão de crédito com fatura zerada todo mês = você usa
+                        o dinheiro do banco de graça por até 40 dias. Sem juros.</span>
+                    </div>
+                </div>
+
+                <div class="plano-passo">
+                    <div class="plano-numero" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">
+                        3</div>
+                    <div class="plano-texto">
+                        <strong>Pequenos Investimentos</strong>
+                        <span>Tesouro Direto, CDB ou Poupança. Mesmo R$50/mês faz
+                        diferença em 5 anos. O importante é o hábito.</span>
+                    </div>
+                </div>
+
+                <div class="plano-passo">
+                    <div class="plano-numero" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">
+                        4</div>
+                    <div class="plano-texto">
+                        <strong>Orçamento Simples Mensal</strong>
+                        <span>50% para necessidades, 30% para desejos, 20% para
+                        guardar. Regra 50-30-20. Simples e eficaz.</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<!-- ====================================
+     SCRIPTS
+===================================== -->
+<script>
+/* ================================================
+   ESTADO GLOBAL DO APLICATIVO
+================================================ */
+const estado = {
+    entradas: [],
+    dividas: [],
+    cartao: {
+        limite: 0,
+        usado: 0,
+        fatura: 0,
+        vencimento: null,
+        juros: 15,
+        banco: ''
+    }
+};
+
+/* ================================================
+   UTILITÁRIOS
+================================================ */
+const fmt = (v) => v.toLocaleString('pt-BR', {
+    style: 'currency', currency: 'BRL'
+});
+
+const fmtNum = (v, dec = 1) => v.toFixed(dec).replace('.', ',');
+
+const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+const gerarId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+function mostrarToast(msg, tipo = '✅') {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = `<span>${tipo}</span> ${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(20px)';
+        t.style.transition = 'all 0.3s ease';
+        setTimeout(() => t.remove(), 300);
+    }, 3000);
+}
+
+/* ================================================
+   NAVEGAÇÃO
+================================================ */
+function mostrarSecao(id, btn) {
+    document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('ativo'));
+    document.getElementById('sec-' + id).classList.add('ativa');
+    btn.classList.add('ativo');
+    if (id === 'dashboard') atualizarDashboard();
+    if (id === 'alertas') gerarAlertas();
+}
+
+function mostrarTab(id, btn) {
+    const prefixo = id.split('-')[0] + '-' + id.split('-')[1];
+    document.querySelectorAll(`[id^="tab-${prefixo.split('-')[0]}-"]`).forEach(t => {
+        t.classList.remove('ativo');
+    });
+    // Pegar tabs do mesmo grupo
+    const allTabs = btn.closest('.tabs-internas').querySelectorAll('.tab-btn');
+    allTabs.forEach(b => b.classList.remove('ativo'));
+    btn.classList.add('ativo');
+
+    document.querySelectorAll('.tab-conteudo').forEach(t => t.classList.remove('ativo'));
+    document.getElementById('tab-' + id).classList.add('ativo');
+}
+
+/* ================================================
+   DATA
+================================================ */
+(function() {
+    const hoje = new Date();
+    const opts = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+    document.getElementById('dataHoje').textContent =
+        hoje.toLocaleDateString('pt-BR', opts);
+})();
+
+/* ================================================
+   MÓDULO: ENTRADAS
+================================================ */
+function adicionarEntrada() {
+    const tipo  = document.getElementById('ent-tipo').value;
+    const valor = parseFloat(document.getElementById('ent-valor').value);
+    const dia   = parseInt(document.getElementById('ent-dia').value) || 1;
+    const obs   = document.getElementById('ent-obs').value.trim();
+
+    if (!valor || valor <= 0) {
+        mostrarToast('Informe um valor válido.', '❌');
+        return;
+    }
+
+    const entrada = { id: gerarId(), tipo, valor, dia, obs };
+    estado.entradas.push(entrada);
+
+    document.getElementById('ent-valor').value = '';
+    document.getElementById('ent-obs').value = '';
+
+    renderizarEntradas();
+    atualizarDashboard();
+    mostrarToast(`${tipo} de ${fmt(valor)} adicionada!`, '✅');
+}
+
+function removerEntrada(id) {
+    estado.entradas = estado.entradas.filter(e => e.id !== id);
+    renderizarEntradas();
+    atualizarDashboard();
+    mostrarToast('Entrada removida.', '🗑️');
+}
+
+function renderizarEntradas() {
+    const el = document.getElementById('lista-entradas');
+    const total = estado.entradas.reduce((s, e) => s + e.valor, 0);
+    const qtd   = estado.entradas.length;
+    const media = qtd > 0 ? total / qtd : 0;
+
+    document.getElementById('ent-total').textContent = fmt(total);
+    document.getElementById('ent-qtd').textContent   = qtd;
+    document.getElementById('ent-media').textContent  = fmt(media);
+
+    if (qtd === 0) {
+        el.innerHTML = `<div class="vazio">
+            <div class="vazio-icone">💵</div>
+            <div class="vazio-texto">Nenhuma entrada cadastrada ainda.<br>
+            Adicione suas fontes de renda acima.</div></div>`;
+        return;
+    }
+
+    const icones = {
+        'Aposentadoria': '🏛️', 'Pensão': '💼', 'Ajuda Familiar': '👨‍👩‍👧',
+        'Salário': '💰', 'Aluguel Recebido': '🏠', 'Freelance': '🎯', 'Outro': '📌'
+    };
+
+    el.innerHTML = estado.entradas.map(e => `
+        <div class="lista-item" style="border-left-color:var(--verde)">
+            <div class="lista-item-info">
+                <div class="lista-item-nome">${icones[e.tipo] || '📌'} ${e.tipo}</div>
+                <div class="lista-item-detalhe">
+                    Recebe todo dia ${e.dia}${e.obs ? ' · ' + e.obs : ''}
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div class="lista-item-valor" style="color:var(--verde)">${fmt(e.valor)}</div>
+                <button class="btn btn-cinza btn-pequeno" style="margin-top:4px;"
+                    onclick="removerEntrada('${e.id}')">🗑️ Remover</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ================================================
+   MÓDULO: CARTÃO
+================================================ */
+function atualizarCartao() {
+    const limite = parseFloat(document.getElementById('cart-limite').value) || 0;
+    const usado  = parseFloat(document.getElementById('cart-usado').value) || 0;
+    const fatura = parseFloat(document.getElementById('cart-fatura').value) || 0;
+    const juros  = parseFloat(document.getElementById('cart-juros').value) || 15;
+    const venc   = document.getElementById('cart-venc').value;
+
+    estado.cartao = { limite, usado, fatura, juros, venc,
+                      banco: document.getElementById('cart-banco').value };
+
+    const pct  = limite > 0 ? (usado / limite) * 100 : 0;
+    const disp = Math.max(limite - usado, 0);
+
+    // Medidor circular
+    const circ = document.getElementById('medidor-cart');
+    const circunf = 2 * Math.PI * 54;
+    const offset = circunf * (1 - clamp(pct, 0, 100) / 100);
+    circ.style.strokeDashoffset = offset;
+
+    let corCirc = '#27ae60';
+    if (pct > 80) corCirc = '#e74c3c';
+    else if (pct > 60) corCirc = '#f39c12';
+    circ.style.stroke = corCirc;
+
+    document.getElementById('cart-pct-num').textContent = fmtNum(pct, 0) + '%';
+    document.getElementById('cart-v-limite').textContent = fmt(limite);
+    document.getElementById('cart-v-usado').textContent  = fmt(usado);
+    document.getElementById('cart-v-disp').textContent   = fmt(disp);
+
+    // Barra principal
+    document.getElementById('barra-limite').style.width = clamp(pct, 0, 100) + '%';
+    document.getElementById('pct-limite-txt').textContent = fmtNum(pct, 0) + '%';
+
+    const barraLimEl = document.getElementById('barra-limite');
+    if (pct > 80) { barraLimEl.className = 'barra-preenchimento barra-vermelha'; }
+    else if (pct > 60) { barraLimEl.className = 'barra-preenchimento barra-amarela'; }
+    else { barraLimEl.className = 'barra-preenchimento barra-verde'; }
+
+    // Alerta do cartão
+    const alertEl = document.getElementById('alert-cartao');
+    if (pct > 90) {
+        alertEl.innerHTML = `<div class="alerta alerta-vermelho">
+            <div class="alerta-icone">🚨</div>
+            <div><strong>CRÍTICO!</strong> Você está usando ${fmtNum(pct,0)}% do limite.
+            Risco alto de bloqueio do crédito pelo banco.</div></div>`;
+    } else if (pct > 80) {
+        alertEl.innerHTML = `<div class="alerta alerta-amarelo">
+            <div class="alerta-icone">⚠️</div>
+            <div><strong>Atenção!</strong> Uso do cartão em ${fmtNum(pct,0)}%.
+            Acima de 80%, o banco pode reduzir seu limite.</div></div>`;
+    } else if (pct > 60) {
+        alertEl.innerHTML = `<div class="alerta alerta-amarelo">
+            <div class="alerta-icone">⚡</div>
+            <div>Uso em ${fmtNum(pct,0)}%. Considere reduzir para abaixo de 60%.</div></div>`;
+    } else if (limite > 0) {
+        alertEl.innerHTML = `<div class="alerta alerta-verde">
+            <div class="alerta-icone">✅</div>
+            <div>Uso do cartão em ${fmtNum(pct,0)}%. Situação saudável!</div></div>`;
+    } else {
+        alertEl.innerHTML = '';
+    }
+
+    // Simulação de juros rotativos
+    const simJuros = document.getElementById('sim-juros');
+    if (fatura > 0 && juros > 0) {
+        simJuros.style.display = 'block';
+        const jurosMensal = juros / 100;
+        const j1 = fatura * jurosMensal;
+        const t1 = fatura * (1 + jurosMensal);
+        const t3 = fatura * Math.pow(1 + jurosMensal, 3);
+
+        document.getElementById('fat-atual').textContent  = fmt(fatura);
+        document.getElementById('fat-juros1').textContent = fmt(j1);
+        document.getElementById('fat-total1').textContent = fmt(t1);
+        document.getElementById('fat-total3').textContent = fmt(t3);
+    } else {
+        simJuros.style.display = 'none';
+    }
+
+    atualizarDashboard();
+}
+
+/* ================================================
+   MÓDULO: DÍVIDAS
+================================================ */
+function adicionarDivida() {
+    const nome    = document.getElementById('div-nome').value.trim();
+    const valor   = parseFloat(document.getElementById('div-valor').value);
+    const parcela = parseFloat(document.getElementById('div-parcela').value) || 0;
+    const juros   = parseFloat(document.getElementById('div-juros').value) || 0;
+    const venc    = parseInt(document.getElementById('div-venc').value) || 0;
+    const tipo    = document.getElementById('div-tipo').value;
+
+    if (!nome) { mostrarToast('Informe o nome da dívida.', '❌'); return; }
+    if (!valor || valor <= 0) { mostrarToast('Informe um valor válido.', '❌'); return; }
+
+    const divida = { id: gerarId(), nome, valor, parcela, juros, venc, tipo };
+    estado.dividas.push(divida);
+
+    document.getElementById('div-nome').value    = '';
+    document.getElementById('div-valor').value   = '';
+    document.getElementById('div-parcela').value = '';
+    document.getElementById('div-juros').value   = '';
+    document.getElementById('div-venc').value    = '';
+
+    renderizarDividas();
+    atualizarDashboard();
+    mostrarToast(`Dívida "${nome}" adicionada!`, '📋');
+}
+
+function removerDivida(id) {
+    estado.dividas = estado.dividas.filter(d => d.id !== id);
+    renderizarDividas();
+    atualizarDashboard();
+    mostrarToast('Dívida removida.', '🗑️');
+}
+
+function renderizarDividas() {
+    const el = document.getElementById('lista-dividas');
+    const total    = estado.dividas.reduce((s, d) => s + d.valor, 0);
+    const parcelas = estado.dividas.reduce((s, d) => s + d.parcela, 0);
+    const qtd      = estado.dividas.length;
+
+    document.getElementById('div-total').textContent       = fmt(total);
+    document.getElementById('div-parcelas-mes').textContent = fmt(parcelas);
+    document.getElementById('div-qtd').textContent          = qtd;
+
+    if (qtd === 0) {
+        el.innerHTML = `<div class="vazio">
+            <div class="vazio-icone">📋</div>
+            <div class="vazio-texto">Nenhuma dívida cadastrada ainda.</div></div>`;
+        return;
+    }
+
+    const iconeTipo = {
+        'Cartão de Crédito': '💳', 'Empréstimo Pessoal': '🏦',
+        'Cheque Especial': '📝', 'Crediário': '🛒', 'Consignado': '💼',
+        'Financiamento': '🏠', 'Dívida com Familiar': '👨‍👩‍👧', 'Outro': '📌'
+    };
+
+    const corRisco = (j) => j > 10 ? 'var(--vermelho)' : j > 5 ? 'var(--amarelo)' : 'var(--verde)';
+
+    el.innerHTML = estado.dividas.map(d => `
+        <div class="lista-item" style="border-left-color:var(--vermelho)">
+            <div class="lista-item-info">
+                <div class="lista-item-nome">${iconeTipo[d.tipo] || '📌'} ${d.nome}</div>
+                <div class="lista-item-detalhe">
+                    ${d.tipo} · Vence dia ${d.venc || '?'} ·
+                    Juros: <span style="color:${corRisco(d.juros)};font-weight:700">
+                    ${fmtNum(d.juros)}%/mês</span>
+                </div>
+                ${d.parcela > 0 ? `<div class="lista-item-detalhe">
+                    Parcela: ${fmt(d.parcela)}/mês</div>` : ''}
+            </div>
+            <div style="text-align:right;">
+                <div class="lista-item-valor" style="color:var(--vermelho)">${fmt(d.valor)}</div>
+                <button class="btn btn-cinza btn-pequeno" style="margin-top:4px;"
+                    onclick="removerDivida('${d.id}')">🗑️ Remover</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ================================================
+   DASHBOARD — ATUALIZAÇÃO
+================================================ */
+function atualizarDashboard() {
+    const totalEntradas = estado.entradas.reduce((s, e) => s + e.valor, 0);
+    const totalDividas  = estado.dividas.reduce((s, d) => s + d.valor, 0);
+    const totalParcelas = estado.dividas.reduce((s, d) => s + d.parcela, 0);
+    const { limite, usado } = estado.cartao;
+    const saldoDisp = totalEntradas - totalParcelas;
+
+    document.getElementById('dash-saldo').textContent =
+        fmt(Math.max(saldoDisp, 0));
+    document.getElementById('dash-saldo-det').textContent =
+        `Entradas (${fmt(totalEntradas)}) − Parcelas (${fmt(totalParcelas)})`;
+
+    document.getElementById('dash-dividas').textContent = fmt(totalDividas);
+    document.getElementById('dash-dividas-det').textContent =
+        estado.dividas.length > 0
+            ? `${estado.dividas.length} dívida(s) cadastrada(s)`
+            : 'Nenhuma dívida cadastrada';
+
+    document.getElementById('dash-credito').textContent = fmt(usado);
+    document.getElementById('dash-credito-det').textContent =
+        limite > 0 ? `de ${fmt(limite)} disponível` : 'Limite não informado';
+
+    // Próximo vencimento
+    const divOrdenada = [...estado.dividas].sort((a, b) => a.venc - b.venc);
+    if (divOrdenada.length > 0 && divOrdenada[0].venc) {
+        document.getElementById('dash-venc').textContent =
+            `Dia ${divOrdenada[0].venc}`;
+        document.getElementById('dash-venc-det').textContent =
+            divOrdenada[0].nome;
+    } else {
+        document.getElementById('dash-venc').textContent = '-';
+        document.getElementById('dash-venc-det').textContent = 'Nenhum cadastrado';
+    }
+
+    // CÁLCULO DE RISCO
+    let pontos = 0;
+    const fatores = [];
+
+    // Uso do limite
+    const pctLimite = limite > 0 ? (usado / limite) * 100 : 0;
+    if (pctLimite > 90) { pontos += 40; fatores.push('uso do cartão crítico'); }
+    else if (pctLimite > 80) { pontos += 30; }
+    else if (pctLimite > 60) { pontos += 15; }
+
+    // Comprometimento da renda
+    const pctRenda = totalEntradas > 0
+        ? (totalParcelas / totalEntradas) * 100 : 0;
+    if (pctRenda > 50) { pontos += 40; fatores.push('mais de 50% da renda em parcelas'); }
+    else if (pctRenda > 30) { pontos += 20; }
+    else if (pctRenda > 20) { pontos += 10; }
+
+    // Saldo negativo
+    if (saldoDisp < 0) { pontos += 20; fatores.push('saldo disponível negativo'); }
+
+    // Nº de dívidas
+    if (estado.dividas.length >= 5) { pontos += 10; }
+    else if (estado.dividas.length >= 3) { pontos += 5; }
+
+    pontos = clamp(pontos, 0, 100);
+
+    // Atualizar medidor
+    const circunf = 2 * Math.PI * 54;
+    const offset  = circunf * (1 - pontos / 100);
+    const medCirc = document.getElementById('medidor-circ');
+    medCirc.style.strokeDashoffset = offset;
+
+    document.getElementById('medidor-num').textContent = pontos + '%';
+
+    let corMed = '#27ae60', classBadge = 'badge-baixo', textoBadge = '✅ Risco Baixo';
+    if (pontos >= 70) {
+        corMed = '#e74c3c'; classBadge = 'badge-critico';
+        textoBadge = '🚨 Risco Crítico';
+    } else if (pontos >= 50) {
+        corMed = '#ca6f1e'; classBadge = 'badge-alto';
+        textoBadge = '🔴 Risco Alto';
+    } else if (pontos >= 30) {
+        corMed = '#f39c12'; classBadge = 'badge-medio';
+        textoBadge = '⚠️ Risco Médio';
+    }
+
+    medCirc.style.stroke = corMed;
+    document.getElementById('medidor-num').style.color = corMed;
+
+    const badge = document.getElementById('badge-risco');
+    badge.className = 'badge ' + classBadge;
+    badge.textContent = textoBadge;
+
+    let textoRisco = '';
+    if (fatores.length > 0) {
+        textoRisco = `<strong>Atenção:</strong> ${fatores.join(', ')}.`;
+    } else if (pontos < 20) {
+        textoRisco = 'Sua situação financeira parece equilibrada. Continue assim!';
+    } else {
+        textoRisco = 'Continue monitorando suas finanças.';
+    }
+    document.getElementById('texto-risco').innerHTML = textoRisco;
+
+    // Barras do dashboard
+    const pctLimClamp = clamp(pctLimite, 0, 100);
+    document.getElementById('barra-limite').style.width    = pctLimClamp + '%';
+    document.getElementById('pct-limite-txt').textContent  = fmtNum(pctLimite, 0) + '%';
+
+    const pctRendaClamp = clamp(pctRenda, 0, 100);
+    document.getElementById('barra-divida').style.width   = pctRendaClamp + '%';
+    document.getElementById('pct-divida-txt').textContent = fmtNum(pctRenda, 0) + '%';
+
+    const barraDivEl = document.getElementById('barra-divida');
+    if (pctRenda > 50) barraDivEl.className = 'barra-preenchimento barra-vermelha';
+    else if (pctRenda > 30) barraDivEl.className = 'barra-preenchimento barra-amarela';
+    else barraDivEl.className = 'barra-preenchimento barra-verde';
+
+    // Dica do dia
+    const dicas = [
+        'Pague sempre o valor <strong>total</strong> da fatura do cartão para evitar juros rotativos.',
+        'Tente destinar pelo menos <strong>10% da sua renda</strong> para quitar dívidas extras.',
+        'Negocie suas dívidas diretamente com o banco — muitos aceitam <strong>descontos de até 50%</strong>.',
+        'Mantenha o uso do cartão <strong>abaixo de 60%</strong> do limite para não correr riscos.',
+        'Uma <strong>reserva de emergência</strong> evita que você precise usar o cartão em apertos.',
+        'Compare <strong>diferentes estratégias</strong> de pagamento no simulador.',
+    ];
+    document.getElementById('dica-dia').innerHTML =
+        '💡 ' + dicas[Math.floor(Math.random() * dicas.length)];
+}
+
+/* ================================================
+   MÓDULO: ALERTAS
+================================================ */
+function gerarAlertas() {
+    const el = document.getElementById('container-alertas');
+    const alertas = [];
+
+    const totalEntradas = estado.entradas.reduce((s, e) => s + e.valor, 0);
+    const totalParcelas = estado.dividas.reduce((s, d) => s + d.parcela, 0);
+    const { limite, usado, fatura, juros } = estado.cartao;
+    const pctLimite = limite > 0 ? (usado / limite) * 100 : 0;
+    const pctRenda  = totalEntradas > 0 ? (totalParcelas / totalEntradas) * 100 : 0;
+
+    if (pctLimite > 90) alertas.push({
+        tipo: 'vermelho', icone: '🚨',
+        msg: `<strong>CRÍTICO:</strong> Você está usando ${fmtNum(pctLimite,0)}% do limite
+              do cartão. O banco pode bloquear o crédito. Tente pagar parte imediatamente.`
+    });
+    else if (pctLimite > 80) alertas.push({
+        tipo: 'amarelo', icone: '⚠️',
+        msg: `Uso do cartão em <strong>${fmtNum(pctLimite,0)}%</strong>.
+              Limite considerado alto. Reduza para abaixo de 60%.`
+    });
+    else if (pctLimite > 60) alertas.push({
+        tipo: 'amarelo', icone: '⚡',
+        msg: `Uso do cartão em ${fmtNum(pctLimite,0)}%. Monitorar de perto.`
+    });
+
+    if (pctRenda > 50) alertas.push({
+        tipo: 'vermelho', icone: '🚨',
+        msg: `<strong>CRÍTICO:</strong> ${fmtNum(pctRenda,0)}% da sua renda está comprometida
+              com parcelas. O ideal é no máximo 30%. Busque renegociar urgentemente.`
+    });
+    else if (pctRenda > 30) alertas.push({
+        tipo: 'amarelo', icone: '⚠️',
+        msg: `${fmtNum(pctRenda,0)}% da renda comprometida com parcelas.
+              Tente reduzir para abaixo de 30%.`
+    });
+
+    const saldo = totalEntradas - totalParcelas;
+    if (saldo < 0) alertas.push({
+        tipo: 'vermelho', icone: '🚨',
+        msg: `<strong>Saldo negativo!</strong> Suas parcelas (${fmt(totalParcelas)})
+              superam suas entradas (${fmt(totalEntradas)}).
+              Isso cria dependência do cartão de crédito.`
+    });
+    else if (saldo < 200 && totalEntradas > 0) alertas.push({
+        tipo: 'amarelo', icone: '⚠️',
+        msg: `Saldo disponível muito baixo: <strong>${fmt(saldo)}</strong>.
+              Qualquer imprevisto pode levar ao uso do cartão.`
+    });
+
+    if (fatura > 0 && juros > 0) {
+        const jurosMes = fatura * (juros / 100);
+        alertas.push({
+            tipo: 'amarelo', icone: '💳',
+            msg: `Se não pagar a fatura de <strong>${fmt(fatura)}</strong> integralmente,
+                  você pagará <strong>${fmt(jurosMes)}</strong> só de juros neste mês.`
+        });
+    }
+
+    const divHighJuros = estado.dividas.filter(d => d.juros > 10);
+    if (divHighJuros.length > 0) alertas.push({
+        tipo: 'vermelho', icone: '💸',
+        msg: `Você tem <strong>${divHighJuros.length} dívida(s) com juros acima de 10% ao mês</strong>.
+              Priorize pagar essas primeiro — elas crescem rápido.`
+    });
+
+    if (estado.dividas.length === 0 && estado.entradas.length === 0) {
+        el.innerHTML = `<div class="vazio">
+            <div class="vazio-icone">🔔</div>
+            <div class="vazio-texto">Cadastre seus dados para receber alertas personalizados.</div>
+        </div>`;
+        return;
+    }
+
+    if (alertas.length === 0) {
+        el.innerHTML = `<div class="alerta alerta-verde">
+            <div class="alerta-icone">🎉</div>
+            <div><strong>Parabéns!</strong> Nenhum alerta crítico no momento.
+            Continue monitorando.</div></div>`;
+        return;
+    }
+
+    el.innerHTML = alertas.map(a => `
+        <div class="alerta alerta-${a.tipo}">
+            <div class="alerta-icone">${a.icone}</div>
+            <div>${a.msg}</div>
+        </div>
+    `).join('');
+}
+
+/* ================================================
+   MÓDULO: SIMULADOR
+================================================ */
+function calcularAmortizacao(divida, pagtoMensal, jurosMensal) {
+    if (pagtoMensal <= 0) return null;
+    if (jurosMensal === 0) {
+        const meses = Math.ceil(divida / pagtoMensal);
+        return { meses, jurosTotal: 0, totalPago: divida };
+    }
+
+    let saldo = divida;
+    let meses = 0;
+    let jurosTotal = 0;
+    const maxMeses = 600;
+
+    while (saldo > 0.01 && meses < maxMeses) {
+        const j = saldo * jurosMensal;
+        jurosTotal += j;
+        saldo = saldo + j - pagtoMensal;
+        meses++;
+        if (pagtoMensal <= saldo * jurosMensal && meses > 2) break;
+    }
+
+    if (meses >= maxMeses) return null;
+    return {
+        meses,
+        jurosTotal,
+        totalPago: divida + jurosTotal
+    };
+}
+
+function simularPagamento() {
+    const divida = parseFloat(document.getElementById('sim-divida').value);
+    const pagto  = parseFloat(document.getElementById('sim-pagto').value);
+    const juros  = parseFloat(document.getElementById('sim-juros').value) / 100;
+    const el     = document.getElementById('resultado-simulacao');
+
+    if (!divida || !pagto) {
+        mostrarToast('Preencha todos os campos.', '❌'); return;
+    }
+
+    const res = calcularAmortizacao(divida, pagto, juros);
+
+    if (!res) {
+        el.innerHTML = `<div class="alerta alerta-vermelho">
+            <div class="alerta-icone">🚨</div>
+            <div><strong>Atenção!</strong> O pagamento de ${fmt(pagto)}/mês
+            não é suficiente para cobrir os juros. Aumente o valor pago.</div></div>`;
+        return;
+    }
+
+    const anos  = Math.floor(res.meses / 12);
+    const meses = res.meses % 12;
+    const tempoStr = anos > 0
+        ? `${anos} ano(s) e ${meses} mês(es) (${res.meses} meses)`
+        : `${res.meses} mês(es)`;
+
+    el.innerHTML = `
+        <div class="simulador-resultado">
+            <div style="font-weight:800; font-size:1.1rem; margin-bottom:14px; color:var(--azul);">
+                📊 Resultado da Simulação
+            </div>
+            <div class="simulador-linha">
+                <span class="simulador-linha-label">Dívida inicial</span>
+                <span class="simulador-linha-valor">${fmt(divida)}</span>
+            </div>
+            <div class="simulador-linha">
+                <span class="simulador-linha-label">Pagamento mensal</span>
+                <span class="simulador-linha-valor">${fmt(pagto)}</span>
+            </div>
+            <div class="simulador-linha">
+                <span class="simulador-linha-label">⏳ Tempo para quitar</span>
+                <span class="simulador-linha-valor" style="color:var(--azul)">${tempoStr}</span>
+            </div>
+            <div class="simulador-linha">
+                <span class="simulador-linha-label">💸 Total de juros pagos</span>
+                <span class="simulador-linha-valor" style="color:var(--vermelho)">
+                    ${fmt(res.jurosTotal)}</span>
+            </div>
+            <div class="simulador-linha">
+                <span class="simulador-linha-label">💰 Total pago (dívida + juros)</span>
+                <span class="simulador-linha-valor" style="color:var(--texto); font-size:1.2rem">
+                    ${fmt(res.totalPago)}</span>
+            </div>
+        </div>
+        ${res.jurosTotal > divida * 0.3 ? `
+        <div class="alerta alerta-amarelo" style="margin-top:12px;">
+            <div class="alerta-icone">💡</div>
+            <div>Aumentar o pagamento mensal reduzirá bastante os juros pagos.
+            Tente aumentar em R$50–R$100 por mês.</div>
+        </div>` : ''}
+    `;
+}
+
+function preencherSimulador() {
+    const total = estado.dividas.reduce((s, d) => s + d.valor, 0);
+    const parcelas = estado.dividas.reduce((s, d) => s + d.parcela, 0);
+    const jurosMax = estado.dividas.length > 0
+        ? Math.max(...estado.dividas.map(d => d.juros)) : 5;
+
+    if (total > 0) {
+        document.getElementById('sim-divida').value  = total.toFixed(2);
+        document.getElementById('sim-pagto').value   = parcelas.toFixed(2);
+        document.getElementById('sim-juros').value   = jurosMax.toFixed(1);
+        mostrarToast('Dados importados!', '✅');
+    } else {
+        mostrarToast('Nenhuma dívida cadastrada.', '❌');
+    }
+}
+
+function compararCenarios() {
+    const divida = parseFloat(document.getElementById('comp-divida').value);
+    const juros  = parseFloat(document.getElementById('comp-juros').value) / 100;
+    const pagtos = [
+        parseFloat(document.getElementById('comp-p1').value),
+        parseFloat(document.getElementById('comp-p2').value),
+        parseFloat(document.getElementById('comp-p3').value)
+    ].filter(p => p > 0);
+
+    const el = document.getElementById('resultado-comparacao');
+
+    if (!divida || pagtos.length === 0) {
+        mostrarToast('Preencha a dívida e pelo menos um pagamento.', '❌');
+        return;
+    }
+
+    const cores = ['var(--vermelho)', 'var(--amarelo)', 'var(--verde)'];
+    const emojis = ['🔴', '🟡', '🟢'];
+
+    let html = '<div style="margin-top:16px;">';
+    pagtos.forEach((p, i) => {
+        const res = calcularAmortizacao(divida, p, juros);
+        if (!res) {
+            html += `<div class="alerta alerta-vermelho">
+                <div class="alerta-icone">🚨</div>
+                <div>Pagamento ${fmt(p)}/mês não cobre nem os juros.</div></div>`;
+            return;
+        }
+        const anos  = Math.floor(res.meses / 12);
+        const meses = res.meses % 12;
+        html += `
+            <div class="card" style="border-left:5px solid ${cores[i]}; margin-bottom:12px;">
+                <div style="font-weight:800; font-size:1rem; margin-bottom:10px;">
+                    ${emojis[i]} Opção ${i+1} — ${fmt(p)}/mês
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">⏳ Tempo</span>
+                    <span class="simulador-linha-valor" style="color:${cores[i]}">
+                        ${anos > 0 ? anos + 'a ' : ''}${meses}m (${res.meses} meses)</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">💸 Juros pagos</span>
+                    <span class="simulador-linha-valor">${fmt(res.jurosTotal)}</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">💰 Total pago</span>
+                    <span class="simulador-linha-valor">${fmt(res.totalPago)}</span>
+                </div>
+            </div>`;
+    });
+    html += '</div>';
+
+    if (pagtos.length >= 2) {
+        const res0 = calcularAmortizacao(divida, pagtos[0], juros);
+        const resU = calcularAmortizacao(divida, pagtos[pagtos.length - 1], juros);
+        if (res0 && resU) {
+            const economiaJuros = res0.jurosTotal - resU.jurosTotal;
+            const economiaMeses = res0.meses - resU.meses;
+            html += `<div class="alerta alerta-azul">
+                <div class="alerta-icone">💡</div>
+                <div>Optando pelo pagamento maior, você economiza
+                <strong>${fmt(economiaJuros)}</strong> em juros e quita
+                <strong>${economiaMeses} meses antes</strong>.</div></div>`;
+        }
+    }
+
+    el.innerHTML = html;
+}
+
+function calcularEstrategia() {
+    const extra = parseFloat(document.getElementById('est-extra').value) || 0;
+    const el    = document.getElementById('resultado-estrategia');
+
+    if (estado.dividas.length === 0) {
+        el.innerHTML = `<div class="alerta alerta-azul">
+            <div class="alerta-icone">💡</div>
+            <div>Cadastre suas dívidas primeiro para receber sugestões personalizadas.</div>
+        </div>`;
+        return;
+    }
+
+    const totalExtra = estado.dividas.reduce((s, d) => s + d.parcela, 0) + extra;
+
+    // Bola de neve
+    const neve = [...estado.dividas].sort((a, b) => a.valor - b.valor);
+    // Avalanche
+    const aval = [...estado.dividas].sort((a, b) => b.juros - a.juros);
+
+    let html = `
+        <div class="alerta alerta-verde" style="margin-bottom:12px;">
+            <div class="alerta-icone">💰</div>
+            <div>Com <strong>${fmt(totalExtra)}/mês</strong> destinados às dívidas,
+            veja a ordem recomendada:</div>
+        </div>
+        <div class="card">
+            <div class="card-titulo">❄️ Bola de Neve — Comece pela menor</div>
+            ${neve.map((d, i) => `
+                <div class="plano-passo" style="margin-bottom:8px; padding:10px;">
+                    <div class="plano-numero" style="width:28px;height:28px;font-size:0.8rem">
+                        ${i+1}</div>
+                    <div class="plano-texto">
+                        <strong>${d.nome}</strong>
+                        <span>${fmt(d.valor)} · ${fmtNum(d.juros)}%/mês</span>
+                    </div>
+                </div>`).join('')}
+        </div>
+        <div class="card">
+            <div class="card-titulo">🌊 Avalanche — Comece pelos maiores juros</div>
+            ${aval.map((d, i) => `
+                <div class="plano-passo" style="margin-bottom:8px; padding:10px;">
+                    <div class="plano-numero" style="width:28px;height:28px;font-size:0.8rem;
+                        background:linear-gradient(135deg,#c0392b,#e74c3c)">${i+1}</div>
+                    <div class="plano-texto">
+                        <strong>${d.nome}</strong>
+                        <span>${fmt(d.valor)} · ${fmtNum(d.juros)}%/mês juros</span>
+                    </div>
+                </div>`).join('')}
+        </div>
+        <div class="alerta alerta-azul">
+            <div class="alerta-icone">💡</div>
+            <div>
+                <strong>Qual escolher?</strong><br>
+                • Se precisa de motivação: use a <strong>Bola de Neve</strong>.<br>
+                • Se quer economizar mais: use a <strong>Avalanche</strong>.<br>
+                Ambas funcionam — o importante é começar!
+            </div>
+        </div>`;
+
+    el.innerHTML = html;
+}
+
+/* ================================================
+   MÓDULO: PLANO DE SAÍDA
+================================================ */
+function gerarPlano() {
+    const valorMensal  = parseFloat(document.getElementById('plano-valor').value);
+    const estrategia   = document.getElementById('plano-estrategia').value;
+    const el           = document.getElementById('resultado-plano');
+
+    if (!valorMensal || valorMensal <= 0) {
+        mostrarToast('Informe quanto pode pagar por mês.', '❌');
+        return;
+    }
+
+    if (estado.dividas.length === 0) {
+        el.innerHTML = `<div class="alerta alerta-azul">
+            <div class="alerta-icone">💡</div>
+            <div>Cadastre suas dívidas na seção "Dívidas" para gerar o plano.</div></div>`;
+        return;
+    }
+
+    const totalEntradas = estado.entradas.reduce((s, e) => s + e.valor, 0);
+    const totalDividas  = estado.dividas.reduce((s, d) => s + d.valor, 0);
+
+    let divOrdenadas;
+    if (estrategia === 'neve') {
+        divOrdenadas = [...estado.dividas].sort((a, b) => a.valor - b.valor);
+    } else {
+        divOrdenadas = [...estado.dividas].sort((a, b) => b.juros - a.juros);
+    }
+
+    // Simular meses para quitar tudo
+    let saldos = divOrdenadas.map(d => d.valor);
+    let meses  = 0;
+    let jurosTotal = 0;
+    const maxMeses = 360;
+
+    while (saldos.some(s => s > 0.01) && meses < maxMeses) {
+        let disponivelMes = valorMensal;
+        meses++;
+
+        // Aplicar juros em cada dívida
+        saldos = saldos.map((s, i) => {
+            if (s <= 0) return 0;
+            const j = s * (divOrdenadas[i].juros / 100);
+            jurosTotal += j;
+            return s + j;
+        });
+
+        // Pagar em ordem
+        for (let i = 0; i < saldos.length; i++) {
+            if (saldos[i] <= 0) continue;
+            const pagto = Math.min(disponivelMes, saldos[i]);
+            saldos[i]  -= pagto;
+            disponivelMes -= pagto;
+            if (disponivelMes <= 0) break;
+        }
+    }
+
+    const anos  = Math.floor(meses / 12);
+    const mesesR = meses % 12;
+    const suficiente = meses < maxMeses;
+
+    let html = '';
+
+    if (!suficiente) {
+        html += `<div class="alerta alerta-vermelho">
+            <div class="alerta-icone">🚨</div>
+            <div><strong>Atenção!</strong> Com ${fmt(valorMensal)}/mês, não será suficiente
+            para quitar as dívidas em prazo razoável. Tente aumentar o valor ou renegociar
+            as taxas de juros.</div></div>`;
+    } else {
+        html += `
+            <div class="simulador-resultado" style="margin-bottom:16px;">
+                <div style="font-weight:800; font-size:1.1rem; margin-bottom:14px; color:var(--verde);">
+                    🗺️ Seu Plano de Saída das Dívidas
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Total das dívidas</span>
+                    <span class="simulador-linha-valor">${fmt(totalDividas)}</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">Pagamento mensal</span>
+                    <span class="simulador-linha-valor">${fmt(valorMensal)}</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">🎉 Dívida quitada em</span>
+                    <span class="simulador-linha-valor" style="color:var(--verde); font-size:1.2rem">
+                        ${anos > 0 ? anos + ' ano(s) e ' : ''}${mesesR} mês(es)
+                        (${meses} meses)</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">💸 Total de juros</span>
+                    <span class="simulador-linha-valor" style="color:var(--vermelho)">
+                        ${fmt(jurosTotal)}</span>
+                </div>
+                <div class="simulador-linha">
+                    <span class="simulador-linha-label">📅 Meta: livre em</span>
+                    <span class="simulador-linha-valor" style="color:var(--verde)">
+                        ${(() => {
+                            const data = new Date();
+                            data.setMonth(data.getMonth() + meses);
+                            return data.toLocaleDateString('pt-BR', {
+                                month: 'long', year: 'numeric' });
+                        })()}
+                    </span>
+                </div>
+            </div>`;
+
+        // Passos do plano
+        html += '<h3 style="font-size:1rem;font-weight:700;margin:16px 0 10px;">📋 Ordem de Pagamento</h3>';
+        divOrdenadas.forEach((d, i) => {
+            html += `
+                <div class="plano-passo">
+                    <div class="plano-numero">${i + 1}</div>
+                    <div class="plano-texto">
+                        <strong>${d.nome}</strong>
+                        <span>${fmt(d.valor)} · ${fmtNum(d.juros)}%/mês de juros</span>
+                    </div>
+                </div>`;
+        });
+
+        // Depois de livre
+        if (totalEntradas > 0) {
+            const sobra = totalEntradas - valorMensal;
+            html += `
+                <hr class="separador">
+                <div class="alerta alerta-verde">
+                    <div class="alerta-icone">🎉</div>
+                    <div>
+                        <strong>Após quitar tudo</strong>, você terá
+                        <strong>${fmt(sobra > 0 ? sobra : valorMensal)}/mês</strong>
+                        disponíveis para investir ou guardar!
+                    </div>
+                </div>`;
+        }
+    }
+
+    el.innerHTML = html;
+    mostrarToast('Plano gerado com sucesso!', '🗺️');
+}
+
+/* ================================================
+   INICIALIZAÇÃO
+================================================ */
+atualizarDashboard();
+</script>
+</body>
+                  </html>
